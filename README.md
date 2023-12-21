@@ -1,5 +1,9 @@
 # Markdown to Google Forms
 
+<a target="_blank" href="https://colab.research.google.com/github/george-gca/markdown-to-google-forms/blob/main/Markdown_to_Google_Forms.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
 Python script to convert a Markdown style document into Google Apps Script code, which in turn is used to generate a Google Forms.
 
 This is not the best solution possible, but it is a solution. One can probably implement something more robust by using libraries like [marko](https://github.com/frostming/marko) or [mistletoe](https://github.com/miyuchina/mistletoe).
