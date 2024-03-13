@@ -14,6 +14,10 @@ Use `*` at the start of each line to indicate that the list is a radio button li
 * Radio Navigation Option 1 [Section 2]
 * Radio Navigation Option 2 [Section 3]
 
+### Title and description
+
+Use this to add a title and a description to the form.
+
 
 
 ## Section 2
@@ -29,6 +33,10 @@ Section 2 description
 ```
 This indicates a long text field, and its contents will be ignored.
 ```
+
+### Title and description 1
+
+Use this to add a title and a description to the form.
 
 ### **Radio buttons 1**
 
@@ -131,6 +139,10 @@ Section 3 description
 ```
 This indicates a long text field, and its contents will be ignored.
 ```
+
+### Title and description 2
+
+Use this to add a title and a description to the form.
 
 ### **Radio buttons 2**
 
