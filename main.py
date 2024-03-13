@@ -381,7 +381,7 @@ def main(markdown_file: Path) -> None:
     radio_button_regex = re.compile(r'^\*[\s]*(.*)$')
     checkbox_regex = re.compile(r'^([-*][\s]*)?\[[\s]*\] (.*)$')
     navigation_regex = re.compile(r'^(.*) \[(.*)\]$')
-    paragraph_regex = re.compile(r'^```(.*)```$')
+    paragraph_regex = re.compile(r'^[\s]*```(.|\s)*```[\s]*$')
     short_text_regex = re.compile(r'^`(.*)`$')
     required_regex = re.compile(r'^\*\*(.*)\*\*$')
     scale_regex = re.compile(r'^(.*) (\d)+ --- (\d)+ (.*)$')
