@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--Prism-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css"
+    integrity="sha512-cbQXwDFK7lj2Fqfkuxbo5iD1dSbLlJGXGpfTDqbggqjHJeyzx88I3rfwjS38WJag/ihH7lzuGlGHpDBymLirZQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!--Code-input is on GitHub ==> https://github.com/WebCoder49/code-input-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@webcoder49/code-input@2.2.1/code-input.min.css"
+    integrity="sha256-pxYuJ/BzmQET3BI/s7fRqDN7eSHjfIv9WnX1tydgdAc=" crossorigin="anonymous">
+
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@webcoder49/code-input@2.2.1/plugins/prism-line-numbers.min.css"
+    integrity="sha256-Mle+twXIQr1ajbv7LFEIpuhSRNqFBLHn2UX74oVaVo4=" crossorigin="anonymous">
+
+  <style>
+    body {
+      background-color: #1c1c1d;
+    }
+    code-input textarea::placeholder {
+      opacity: 0.5;
+    }
+    #code,
+    #result-code {
+      width: calc(50% - 16px);
+      height: 90vh;
+      --padding: 8px;
+      float: left;
+    }
+    .code-display-wrapper {
+      position: relative;
+      .copy {
+        background: var(--global-card-bg-color);
+        border-color: var(--global-bg-color);
+        border-radius: 0.3rem;
+        border-style: none;
+        color: var(--global-text-color);
+        font-size: medium;
+        opacity: 0;
+        position: absolute;
+        right: 0.2rem;
+        top: 0.2rem;
+      }
+
+      &:active .copy,
+      &:focus .copy,
+      &:hover .copy {
+        color: var(--global-hover-color);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <form method="post" action="/">
+    <div>
+      <code-input id="code" class="line-numbers code-display-wrapper" lang="Markdown" name="markdown_code"
+        placeholder="Write some markdown">{{ code }}</code-input>
+      <code-input id="result-code" class="line-numbers code-display-wrapper" language="JavaScript" placeholder="Google Apps script will be generated here" readonly>{{ form_script }}</code-input>
+    </div>
+    <button type="submit" aria-label="Reset template" name="reset">Reset template</button>
+    <button type="submit" aria-label="Create script" name="create">Create script</button>
+  </form>
+
+  <!--Prism-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"
+    integrity="sha512-9khQRAUBYEJDCDVP2yw3LRUQvjJ0Pjx0EShmaQjcHa6AXiOv6qHQu9lCAIR8O+/D8FtaCoJ2c0Tf9Xo7hYH01Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"
+    integrity="sha512-SkmBfuA2hqjzEVpmnMt/LINrjop3GKWqsuLSSB3e7iBmYK7JuWw4ldmmxwD9mdm2IRTTi0OxSAfEGvgEi0i2Kw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"
+    integrity="sha512-BttltKXFyWnGZQcRWj6osIg7lbizJchuAMotOkdLxHxwt/Hyo+cl47bZU0QADg+Qt5DJwni3SbYGXeGMB5cBcw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!--Code-input is on GitHub ==> https://github.com/WebCoder49/code-input-->
+  <script src="https://cdn.jsdelivr.net/npm/@webcoder49/code-input@2.2.1/code-input.min.js"
+    integrity="sha256-gwamC/pa7ZDYxGNJ9O09PCFDQP82R2Wfo6GsRqaBm5Q=" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@webcoder49/code-input@2.2.1/plugins/indent.min.js"
+    integrity="sha256-Xz5ckU2tMQLFoDvZP6uNryPViaEyGznARjSz/ErI9L8=" crossorigin="anonymous"></script>
+
+  <script>
+    CopyCode = class extends codeInput.Plugin {
+      constructor() {
+        super([]); // No observed attributes
+      }
+
+      afterElementsAdded(codeInput) {
+        // create copy button
+        var copyButton = document.createElement("button");
+        copyButton.className = "copy";
+        copyButton.type = "button";
+        copyButton.ariaLabel = "Copy code to clipboard";
+        copyButton.innerText = "Copy";
+        copyButton.innerHTML = '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>';
+
+        // get code from code block and copy to clipboard
+        copyButton.addEventListener("click", function () {
+          var code = codeInput.codeElement.innerText.trim();
+          window.navigator.clipboard.writeText(code);
+          copyButton.innerText = "Copied";
+          copyButton.innerHTML = '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 14l2 2l4 -4" /></svg>';
+          var waitFor = 3000;
+
+          setTimeout(function () {
+            copyButton.innerText = "Copy";
+            copyButton.innerHTML = '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>';
+          }, waitFor);
+        });
+
+        codeInput.dialogContainerElement.appendChild(copyButton);
+      }
+    }
+  </script>
+
+  <script type="text/javascript">
+    codeInput.registerTemplate("syntax-highlighted", codeInput.templates.prism(Prism, [
+      new codeInput.plugins.Indent(true, 2),
+      new CopyCode(),
+    ]));
+  </script>
+
+</body>
+
+</html>

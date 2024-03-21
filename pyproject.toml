@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "markdown-to-google-forms"
+version = "0.1.0"
+description = "Convert a well-defined markdown to a Google Apps script that will generate a Google Forms"
+authors = ["George Araujo <george.gcac@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.2"
+flask-minify = "^0.42"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
