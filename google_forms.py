@@ -1,7 +1,28 @@
 import logging
+import re
+from typing import Any
 
 
 _logger = logging.getLogger(__name__)
+
+_main_title_regex = re.compile(r'^#[\s]*(.*)$')
+_confirmation_message_regex = re.compile(r'^_(.*)_$')
+_section_regex = re.compile(r'^##[\s]*(.*)$')
+_title_regex = re.compile(r'^###[\s]*(.*)$')
+_combobox_regex = re.compile(r'^-[\s]*(.*)$')
+_radio_button_regex = re.compile(r'^\*[\s]*(.*)$')
+_checkbox_regex = re.compile(r'^([-*][\s]*)?\[[\s]*\] (.*)$')
+_navigation_regex = re.compile(r'^(.*) \[(.*)\]$')
+_paragraph_regex = re.compile(r'^[\s]*```(.|\s)*```[\s]*$')
+_short_text_regex = re.compile(r'^`(.*)`$')
+_required_regex = re.compile(r'^\*\*(.*)\*\*$')
+_scale_regex = re.compile(r'^(.*) (\d)+ --- (\d)+ (.*)$')
+_date_regex = re.compile(r'^dd|[\d]{2}/mm|[\d]{2}/yyyy|[\d]{4}$')
+_time_regex = re.compile(r'^hh|[\d]{2}:mm|[\d]{2}$')
+_date_time_regex = re.compile(r'^dd|[\d]{2}/mm|[\d]{2}/yyyy|[\d]{4} hh|[\d]{2}:mm|[\d]{2}$')
+_duration_regex = re.compile(r'^hh|[\d]{2}:mm|[\d]{2}:ss|[\d]{2}$')
+_column_row_radio_button_grid_regex = re.compile(r'^####[\s]*(.*)$')
+_column_row_checkbox_grid_regex = re.compile(r'^####[\s]*\[[\s]*\] (.*)$')
 
 
 def begin_create_form():
@@ -18,7 +39,7 @@ def _concatenate_lines(lines: list[str] | tuple[str], identation_level: int = 1,
     return '\n'.join([f'{identation * identation_level}{line}' for line in lines])
 
 
-def create_form(**kwargs) -> str:
+def _create_form(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -39,7 +60,7 @@ def create_form(**kwargs) -> str:
     return _concatenate_lines(lines)
 
 
-def create_section(**kwargs) -> str:
+def _create_section(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addpagebreakitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -74,7 +95,7 @@ def edit_section(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_title_and_description_item(**kwargs) -> str:
+def _create_title_and_description_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addsectionheaderitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -92,7 +113,7 @@ def create_title_and_description_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_short_text_item(**kwargs) -> str:
+def _create_short_text_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addtextitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -114,7 +135,7 @@ def create_short_text_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_paragraph_text_item(**kwargs) -> str:
+def _create_paragraph_text_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addparagraphtextitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -136,7 +157,7 @@ def create_paragraph_text_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_multiple_choice_item(**kwargs) -> str:
+def _create_multiple_choice_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addmultiplechoiceitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -174,7 +195,7 @@ def create_multiple_choice_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_checkbox_item(**kwargs) -> str:
+def _create_checkbox_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addcheckboxitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -210,7 +231,7 @@ def create_checkbox_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_list_item(**kwargs) -> str:
+def _create_list_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addlistitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -246,7 +267,7 @@ def create_list_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_scale_item(**kwargs) -> str:
+def _create_scale_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addscaleitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -274,7 +295,7 @@ def create_scale_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_date_item(**kwargs) -> str:
+def _create_date_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#adddateitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -296,7 +317,7 @@ def create_date_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_time_item(**kwargs) -> str:
+def _create_time_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addtimeitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -318,7 +339,7 @@ def create_time_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_date_time_item(**kwargs) -> str:
+def _create_date_time_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#adddatetimeitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -340,7 +361,7 @@ def create_date_time_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_duration_item(**kwargs) -> str:
+def _create_duration_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#adddurationitem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -362,7 +383,7 @@ def create_duration_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_grid_item(**kwargs) -> str:
+def _create_grid_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addgriditem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -388,7 +409,7 @@ def create_grid_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def create_checkbox_grid_item(**kwargs) -> str:
+def _create_checkbox_grid_item(**kwargs) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#addcheckboxgriditem
     title = kwargs.get('title', '')
     description = kwargs.get('description', '')
@@ -414,7 +435,7 @@ def create_checkbox_grid_item(**kwargs) -> str:
     return '\n' + _concatenate_lines(lines)
 
 
-def move_section_to_end_of_form(title: str) -> str:
+def _move_section_to_end_of_form(title: str) -> str:
     # https://developers.google.com/apps-script/reference/forms/form#moveitemto
 
     lines = [f'form.moveItem(form.getItemById(sections["{title}"].getId()), form.getItems().length - 1);\n']
@@ -423,3 +444,281 @@ def move_section_to_end_of_form(title: str) -> str:
     _logger.debug(f'Moving section to end of form: {title}')
 
     return '\n' + _concatenate_lines(lines)
+
+
+def _reset_args(args: dict[str, Any]) -> None:
+    args['title'] = ''
+    args['description'] = ''
+    args['required'] = False
+    args['choices'] = []
+    args['rows'] = []
+    args['columns'] = []
+
+
+def create_google_apps_script(markdown_file: str) -> None:
+    current_function = None
+    grid = False
+    code = begin_create_form()
+    created_main_title = False
+    created_first_item = False
+
+    row = False
+
+    args = {
+        'title': '',
+        'confirmation_message': '',
+        'description': '',
+        'required': False,
+        'choices': [],
+        'rows': [],
+        'columns': [],
+        'min': -1,
+        'max': -1,
+        'min_label': '',
+        'max_label': '',
+    }
+
+    for i, line in enumerate(markdown_file.strip().split('\n')):
+        _logger.debug(f'Processing line {i}: {line}')
+        # the order of function calls here matters
+        line = line.strip()
+        if len(line) == 0:
+            continue
+
+        match = _column_row_checkbox_grid_regex.match(line)
+        if match is not None:
+            row = match.group(1).strip().lower() == 'rows'
+            current_function = _create_checkbox_grid_item
+            grid = True
+            continue
+
+        match = _column_row_radio_button_grid_regex.match(line)
+        if match is not None:
+            row = match.group(1).strip().lower() == 'rows'
+            current_function = _create_grid_item
+            grid = True
+            continue
+
+        # when reaching a new title or section, create the previous item
+        match = _title_regex.match(line)
+        if match is not None:
+            if current_function is not None:
+                if current_function == _create_form:
+                    created_main_title = True
+
+                code += current_function(**args)
+                grid = False
+
+                if current_function == edit_section:
+                    code += _move_section_to_end_of_form(args['title'])
+
+                _reset_args(args)
+                current_function = None
+
+            elif created_first_item:
+                code += _create_title_and_description_item(**args)
+                grid = False
+                _reset_args(args)
+
+            else:
+                created_first_item = True
+
+            line = match.group(1)
+            match = _required_regex.match(line)
+            if match is not None:
+                args['required'] = True
+                args['title'] = match.group(1)
+
+            else:
+                args['title'] = line
+            continue
+
+        match = _section_regex.match(line)
+        if match is not None:
+            if current_function is not None:
+                if current_function == _create_form:
+                    created_main_title = True
+
+                code += current_function(**args)
+                grid = False
+                _reset_args(args)
+                current_function = None
+
+            elif created_first_item:
+                code += _create_title_and_description_item(**args)
+                grid = False
+                _reset_args(args)
+
+            else:
+                created_first_item = True
+
+            args['title'] = match.group(1)
+            current_function = edit_section
+            continue
+
+        match = _main_title_regex.match(line)
+        if match is not None:
+            if created_main_title:
+                raise Exception('Main title already created')
+
+            args['title'] = match.group(1)
+            current_function = _create_form
+            continue
+
+        match = _confirmation_message_regex.match(line)
+        if match is not None:
+            confirmation_message = match.group(1)
+            args['confirmation_message'] = confirmation_message
+            continue
+
+        match = _paragraph_regex.match(line)
+        if match is not None:
+            current_function = _create_paragraph_text_item
+            continue
+
+        match = _short_text_regex.match(line)
+        if match is not None:
+            current_function = _create_short_text_item
+            continue
+
+        match = _checkbox_regex.match(line)
+        if match is not None:
+            if created_first_item:
+                if grid:
+                    if row:
+                        args['rows'].append(match.group(2))
+                    else:
+                        args['columns'].append(match.group(2))
+
+                else:
+                    option = match.group(2)
+                    match = _navigation_regex.match(option)
+                    if match is not None:
+                        option = match.group(1)
+                        section = match.group(2)
+                        args['choices'].append(f'item.createChoice("{option}", sections["{section}"])')
+
+                    else:
+                        args['choices'].append(option)
+
+                    current_function = _create_checkbox_item
+
+            else:
+                if current_function == _create_form:
+                    created_main_title = True
+                    code += current_function(**args)
+                    _reset_args(args)
+                    current_function = None
+                    grid = False
+
+                code += _create_section(title=match.group(2))
+
+            continue
+
+        match = _radio_button_regex.match(line)
+        if match is not None:
+            if created_first_item:
+                if grid:
+                    if row:
+                        args['rows'].append(match.group(1))
+                    else:
+                        args['columns'].append(match.group(1))
+
+                else:
+                    option = match.group(1)
+                    match = _navigation_regex.match(option)
+                    if match is not None:
+                        option = match.group(1)
+                        section = match.group(2)
+                        args['choices'].append(f'item.createChoice("{option}", sections["{section}"])')
+
+                    else:
+                        args['choices'].append(option)
+
+                    current_function = _create_multiple_choice_item
+
+            else:
+                if current_function == _create_form:
+                    created_main_title = True
+                    code += current_function(**args)
+                    _reset_args(args)
+                    current_function = None
+                    grid = False
+
+                code += _create_section(title=match.group(1))
+
+            continue
+
+        match = _combobox_regex.match(line)
+        if match is not None:
+            if created_first_item:
+                if grid:
+                    if row:
+                        args['rows'].append(match.group(1))
+                    else:
+                        args['columns'].append(match.group(1))
+
+                else:
+                    option = match.group(1)
+                    match = _navigation_regex.match(option)
+                    if match is not None:
+                        option = match.group(1)
+                        section = match.group(2)
+                        args['choices'].append(f'item.createChoice("{option}", sections["{section}"])')
+
+                    else:
+                        args['choices'].append(option)
+                    current_function = _create_list_item
+
+            else:
+                if current_function == _create_form:
+                    created_main_title = True
+                    code += current_function(**args)
+                    _reset_args(args)
+                    current_function = None
+                    grid = False
+
+                code += _create_section(title=match.group(1))
+
+            continue
+
+        match = _scale_regex.match(line)
+        if match is not None:
+            args['min_label'] = match.group(1)
+            args['min'] = match.group(2)
+            args['max'] = match.group(3)
+            args['max_label'] = match.group(4)
+            current_function = _create_scale_item
+            continue
+
+        match = _date_time_regex.match(line)
+        if match is not None:
+            current_function = _create_date_time_item
+            continue
+
+        match = _date_regex.match(line)
+        if match is not None:
+            current_function = _create_date_item
+            continue
+
+        match = _duration_regex.match(line)
+        if match is not None:
+            current_function = _create_duration_item
+            continue
+
+        match = _time_regex.match(line)
+        if match is not None:
+            current_function = _create_time_item
+            continue
+
+        args['description'] = line
+
+    # finished reading the file, create the last item
+    if current_function is not None:
+        code += current_function(**args)
+        _reset_args(args)
+        current_function = None
+
+    code += end_create_form()
+
+    return code
