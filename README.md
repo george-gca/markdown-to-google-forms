@@ -1,5 +1,7 @@
 # Markdown to Google Forms
 
+**NOTE: Since I realized that this would be much more useful to more people if it was a web app, I decided to sunset this repository and [create a new one](https://github.com/george-gca/markdown_to_google_apps_script), with a new flask code base.**
+
 <a target="_blank" href="https://colab.research.google.com/github/george-gca/markdown-to-google-forms/blob/main/Markdown_to_Google_Forms.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
